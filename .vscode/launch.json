@@ -1,0 +1,18 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        
+        {
+            "name": "Run VirtualVans",
+            "type": "cppdbg",
+            "request": "launch",
+            "program": "${workspaceFolder}/main",
+            "args": [],
+            "stopAtEntry": false,
+            "cwd": "${workspaceFolder}",
+            "externalConsole": false,
+            "MIMode": "lldb",
+            "preLaunchTask": "build VirtualVans"
+        }
+    ]
+}
