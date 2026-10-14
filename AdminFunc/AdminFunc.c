@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include "AdminFunc.h"
 #include "GerenciarUsuarios/GerenciarUsuarios.h"
+#include "GerenciarVans/GerenciarVans.h"
 
 void AdminFunc()
 {
@@ -27,7 +28,7 @@ void AdminFunc()
             break;
         
         case 2:
-            printf("Gerenciamento de vans\n");
+            GerenciarVans();
             break;
             
         case 3:
