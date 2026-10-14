@@ -1,10 +1,10 @@
-# Executavel compilado
+# Executável compilado
 main
 
-# Arquivos de depuracao
+# Arquivos de depuração
 *.dSYM/
 
-# Arquivos temporarios
+# Arquivos temporários
 dados/*_temp.csv
 
 # Arquivos do macOS

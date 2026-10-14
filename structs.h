@@ -18,4 +18,12 @@ typedef struct {
     int vanId;
 } User;
 
+typedef struct {
+    int id;
+    char placa[10];
+    char modelo[50];
+    int capacidade;
+    char motorista[100];
+} Van;
+
 #endif
