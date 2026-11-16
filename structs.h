@@ -1,13 +1,11 @@
 #ifndef STRUCTS_H
 #define STRUCTS_H
-
 typedef struct {
     int id;
     char nome[100];
     char email[100];
     char senha[50];
 } Admin;
-
 typedef struct {
     int id;
     char nome[100];
@@ -17,7 +15,6 @@ typedef struct {
     char nomeAluno[100];
     int vanId;
 } User;
-
 typedef struct {
     int id;
     char placa[10];

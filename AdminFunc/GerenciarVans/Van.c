@@ -3,15 +3,38 @@
 #include <string.h>
 #include "Van.h"
 
+#define ARQUIVO_USUARIOS "dados/usuarios.csv"
 #define ARQUIVO_VANS "dados/vans.csv"
 
-typedef struct {
-    int id;
-    char placa[10];
-    char modelo[50];
-    int capacidade;
-    char motorista[100];
-} Van;
+int VanTemUsuarios(int idVan)
+{
+    FILE *arquivo = fopen(ARQUIVO_USUARIOS, "r");
+
+    if (arquivo == NULL)
+    {
+        return 0;
+    }
+
+    char linha[512];
+    int vanIdArquivo;
+
+    while (fgets(linha, sizeof(linha), arquivo) != NULL)
+    {
+        if (sscanf(linha,
+            "%*d,%*99[^,],%*99[^,],%*49[^,],%*19[^,],%*99[^,],%d",
+            &vanIdArquivo) == 1)
+        {
+            if (vanIdArquivo == idVan)
+            {
+                fclose(arquivo);
+                return 1;
+            }
+        }
+    }
+
+    fclose(arquivo);
+    return 0;
+}
 
 void AdicionarVan(void)
 {
@@ -236,7 +259,8 @@ void ExcluirVan(void)
     printf("\n===== EXCLUIR VAN =====\n");
     printf("Digite o ID da van que deseja excluir: ");
 
-    if (scanf("%d", &idBusca) != 1) {
+    if (scanf("%d", &idBusca) != 1)
+    {
         printf("ID invalido!\n");
 
         int c;
@@ -245,24 +269,36 @@ void ExcluirVan(void)
         return;
     }
 
+    // Verifica se existem usuarios vinculados a van
+    if (VanTemUsuarios(idBusca))
+    {
+        printf("Erro: nao e possivel excluir esta van!\n");
+        printf("Existem usuarios vinculados a ela.\n");
+        return;
+    }
+
     FILE *arquivo = fopen(ARQUIVO_VANS, "r");
 
-    if (arquivo == NULL) {
+    if (arquivo == NULL)
+    {
         printf("Erro ao abrir o arquivo de vans!\n");
         return;
     }
 
     FILE *temporario = fopen("dados/vans_temp.csv", "w");
 
-    if (temporario == NULL) {
+    if (temporario == NULL)
+    {
         fclose(arquivo);
         printf("Erro ao criar arquivo temporario!\n");
         return;
     }
 
-    while (fgets(linha, sizeof(linha), arquivo) != NULL) {
+    while (fgets(linha, sizeof(linha), arquivo) != NULL)
+    {
         if (sscanf(linha, "%d,", &idArquivo) == 1 &&
-            idArquivo == idBusca) {
+            idArquivo == idBusca)
+        {
             encontrou = 1;
             continue;
         }
@@ -273,13 +309,15 @@ void ExcluirVan(void)
     fclose(arquivo);
     fclose(temporario);
 
-    if (!encontrou) {
+    if (!encontrou)
+    {
         remove("dados/vans_temp.csv");
         printf("Nenhuma van encontrada com esse ID.\n");
         return;
     }
 
-    if (rename("dados/vans_temp.csv", ARQUIVO_VANS) != 0) {
+    if (rename("dados/vans_temp.csv", ARQUIVO_VANS) != 0)
+    {
         printf("Erro ao atualizar o arquivo de vans!\n");
         return;
     }

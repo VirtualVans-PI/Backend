@@ -1,14 +1,68 @@
+
 #include <stdio.h>
+#include <stdlib.h>
 #include <string.h>
 #include "Usuario.h"
 
-void AdicionarUsuario(User *usuario)
+#define ARQUIVO_USUARIOS "dados/usuarios.csv"
+#define ARQUIVO_VANS "dados/vans.csv"
+#define ARQUIVO_TEMP "dados/usuarios_temp.csv"
 
+// Limpa o restante da linha do teclado
+void LimparEntrada(void)
 {
+    int c;
+
+    while ((c = getchar()) != '\n' && c != EOF)
+    {
+    }
+}
+
+// Verifica se uma van existe no arquivo CSV
+int VanExiste(int id)
+{
+    FILE *arquivo = fopen(ARQUIVO_VANS, "r");
+
+    if (arquivo == NULL)
+    {
+        return 0;
+    }
+
+    int idArquivo;
+    char linha[256];
+
+    while (fgets(linha, sizeof(linha), arquivo) != NULL)
+    {
+        if (sscanf(linha, "%d,", &idArquivo) == 1 &&
+            idArquivo == id)
+        {
+            fclose(arquivo);
+            return 1;
+        }
+    }
+
+    fclose(arquivo);
+    return 0;
+}
+
+// Cadastrar usuario
+void AdicionarUsuario(User *usuario)
+{
+    if (usuario == NULL)
+    {
+        printf("Erro: usuario invalido!\n");
+        return;
+    }
+
     printf("\n===== CADASTRAR USUARIO =====\n");
 
     printf("ID: ");
-    scanf("%d", &usuario->id);
+    if (scanf("%d", &usuario->id) != 1)
+    {
+        printf("ID invalido!\n");
+        LimparEntrada();
+        return;
+    }
 
     printf("Nome: ");
     scanf(" %99[^\n]", usuario->nome);
@@ -26,13 +80,26 @@ void AdicionarUsuario(User *usuario)
     scanf(" %99[^\n]", usuario->nomeAluno);
 
     printf("ID da van: ");
-    scanf("%d", &usuario->vanId);
 
-    FILE *arquivo = fopen("dados/usuarios.csv", "a");
+    if (scanf("%d", &usuario->vanId) != 1)
+    {
+        printf("ID da van invalido!\n");
+        LimparEntrada();
+        return;
+    }
+
+    // Verifica se a van está cadastrada
+    if (!VanExiste(usuario->vanId))
+    {
+        printf("Erro: essa van nao esta cadastrada!\n");
+        return;
+    }
+
+    FILE *arquivo = fopen(ARQUIVO_USUARIOS, "a");
 
     if (arquivo == NULL)
     {
-        printf("Erro ao abrir o arquivo CSV!\n");
+        printf("Erro ao abrir o arquivo de usuarios!\n");
         return;
     }
 
@@ -50,9 +117,8 @@ void AdicionarUsuario(User *usuario)
     printf("Usuario salvo com sucesso!\n");
 }
 
-
+// Excluir usuario
 void ExcluirUsuario(void)
-
 {
     int id;
     int idArquivo;
@@ -65,16 +131,11 @@ void ExcluirUsuario(void)
     if (scanf("%d", &id) != 1)
     {
         printf("ID invalido!\n");
-
-        int c;
-        while ((c = getchar()) != '\n' && c != EOF)
-        {
-        }
-
+        LimparEntrada();
         return;
     }
 
-    FILE *arquivo = fopen("dados/usuarios.csv", "r");
+    FILE *arquivo = fopen(ARQUIVO_USUARIOS, "r");
 
     if (arquivo == NULL)
     {
@@ -82,7 +143,7 @@ void ExcluirUsuario(void)
         return;
     }
 
-    FILE *temporario = fopen("dados/usuarios_temp.csv", "w");
+    FILE *temporario = fopen(ARQUIVO_TEMP, "w");
 
     if (temporario == NULL)
     {
@@ -109,30 +170,29 @@ void ExcluirUsuario(void)
 
     if (!encontrado)
     {
-        remove("dados/usuarios_temp.csv");
+        remove(ARQUIVO_TEMP);
         printf("Usuario com ID %d nao encontrado!\n", id);
         return;
     }
 
-    if (rename("dados/usuarios_temp.csv",
-               "dados/usuarios.csv") != 0)
+    if (rename(ARQUIVO_TEMP, ARQUIVO_USUARIOS) != 0)
     {
         perror("Erro ao atualizar o arquivo de usuarios");
-        remove("dados/usuarios_temp.csv");
+        remove(ARQUIVO_TEMP);
         return;
     }
 
     printf("Usuario excluido com sucesso!\n");
 }
 
-
+// Editar usuario
 void EditarUsuario(void)
-
 {
     int id;
     int idArquivo;
     int encontrado = 0;
     char linha[512];
+
     User usuario;
 
     printf("\n===== EDITAR USUARIO =====\n");
@@ -141,16 +201,11 @@ void EditarUsuario(void)
     if (scanf("%d", &id) != 1)
     {
         printf("ID invalido!\n");
-
-        int c;
-        while ((c = getchar()) != '\n' && c != EOF)
-        {
-        }
-
+        LimparEntrada();
         return;
     }
 
-    FILE *arquivo = fopen("dados/usuarios.csv", "r");
+    FILE *arquivo = fopen(ARQUIVO_USUARIOS, "r");
 
     if (arquivo == NULL)
     {
@@ -158,7 +213,7 @@ void EditarUsuario(void)
         return;
     }
 
-    FILE *temporario = fopen("dados/usuarios_temp.csv", "w");
+    FILE *temporario = fopen(ARQUIVO_TEMP, "w");
 
     if (temporario == NULL)
     {
@@ -187,9 +242,10 @@ void EditarUsuario(void)
             if (campos != 7)
             {
                 printf("Erro: registro do usuario invalido!\n");
+
                 fclose(arquivo);
                 fclose(temporario);
-                remove("dados/usuarios_temp.csv");
+                remove(ARQUIVO_TEMP);
                 return;
             }
 
@@ -214,18 +270,26 @@ void EditarUsuario(void)
             scanf(" %99[^\n]", usuario.nomeAluno);
 
             printf("ID da van: ");
+
             if (scanf("%d", &usuario.vanId) != 1)
             {
                 printf("ID da van invalido!\n");
-
-                int c;
-                while ((c = getchar()) != '\n' && c != EOF)
-                {
-                }
+                LimparEntrada();
 
                 fclose(arquivo);
                 fclose(temporario);
-                remove("dados/usuarios_temp.csv");
+                remove(ARQUIVO_TEMP);
+                return;
+            }
+
+            // Verifica se a nova van existe
+            if (!VanExiste(usuario.vanId))
+            {
+                printf("Erro: essa van nao esta cadastrada!\n");
+
+                fclose(arquivo);
+                fclose(temporario);
+                remove(ARQUIVO_TEMP);
                 return;
             }
 
@@ -252,16 +316,15 @@ void EditarUsuario(void)
 
     if (!encontrado)
     {
-        remove("dados/usuarios_temp.csv");
+        remove(ARQUIVO_TEMP);
         printf("Usuario com ID %d nao encontrado!\n", id);
         return;
     }
 
-    if (rename("dados/usuarios_temp.csv",
-               "dados/usuarios.csv") != 0)
+    if (rename(ARQUIVO_TEMP, ARQUIVO_USUARIOS) != 0)
     {
         perror("Erro ao atualizar o arquivo de usuarios");
-        remove("dados/usuarios_temp.csv");
+        remove(ARQUIVO_TEMP);
         return;
     }
 
