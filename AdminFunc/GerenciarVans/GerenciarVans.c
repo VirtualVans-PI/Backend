@@ -10,7 +10,7 @@ void GerenciarVans(void)
     {
         printf("\n===== GERENCIAR VANS =====\n");
         printf("1 - Cadastrar van\n");
-        printf("2 - Listar vans\n");
+        printf("2 - Consultar vans\n");
         printf("3 - Editar van\n");
         printf("4 - Excluir van\n");
         printf("0 - Voltar\n");
@@ -29,7 +29,7 @@ void GerenciarVans(void)
                 AdicionarVan();
                 break;
             case 2:
-                ListarVans();
+                ConsultarVans();
                 break;
             case 3:
                 EditarVan();
