@@ -7,5 +7,6 @@ void AdicionarVan(void);
 void ListarVans(void);
 void EditarVan(void);
 void ExcluirVan(void);
+void ConsultarVans(void);
 
 #endif
