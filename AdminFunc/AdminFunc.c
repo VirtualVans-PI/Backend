@@ -14,8 +14,6 @@ void AdminFunc()
         printf("\n===== AREA DO ADMINISTRADOR =====\n");
         printf("1 - Gerenciar usuarios\n");
         printf("2 - Gerenciar vans\n");
-        printf("3 - Listar usuarios\n");
-        printf("4 - Listar vans\n");
         printf("0 - Sair\n");
         printf("Escolha: ");
 
@@ -29,14 +27,6 @@ void AdminFunc()
         
         case 2:
             GerenciarVans();
-            break;
-            
-        case 3:
-            printf("Lista de usuarios\n");
-            break;
-
-        case 4:
-            printf("Lista de vans\n");
             break;
 
         case 0:
