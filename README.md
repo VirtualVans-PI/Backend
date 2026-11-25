@@ -4,7 +4,11 @@ Backend do **VirtualVans**, desenvolvido como parte do Projeto Integrador do cur
 
 ## Sobre o projeto
 
-O VirtualVans tem como objetivo auxiliar no gerenciamento do transporte escolar da Van da Tia Cláudia, facilitando a organização dos usuários e preparando a base para futuras funcionalidades do sistema.
+O VirtualVans é um sistema voltado ao gerenciamento do transporte escolar da Van da Tia Cláudia.
+
+O objetivo é centralizar e organizar informações que atualmente são controladas manualmente ou por diferentes meios, como WhatsApp e planilhas, facilitando o gerenciamento de usuários e vans.
+
+Neste semestre, o foco do desenvolvimento é construir a base funcional do sistema em linguagem C, com recursos de cadastro, consulta, alteração e exclusão de registros, além do armazenamento dos dados e do relacionamento entre usuários e veículos.
 
 ## Tecnologias utilizadas
 
@@ -15,11 +19,9 @@ O VirtualVans tem como objetivo auxiliar no gerenciamento do transporte escolar 
 
 ## Funcionalidades implementadas
 
-- Cadastro de usuários.
-- Listagem de usuários.
-- Edição de usuários.
-- Exclusão de usuários.
-- Armazenamento dos dados de usuários em arquivo CSV.
+- Cadastro, listagem, edição e exclusão de usuários.
+- Listagem de usuários e vans pelos módulos de gerenciamento correspondentes.
+- Armazenamento de dados em arquivos CSV.
 - Organização do código em módulos.
 - Compilação automatizada por meio de um `Makefile`.
 
@@ -27,17 +29,27 @@ O VirtualVans tem como objetivo auxiliar no gerenciamento do transporte escolar 
 
 ```text
 VirtualVans/
+├── .vscode/
+│   └── arquivos de configuração
 ├── AdminFunc/
 │   ├── GerenciarUsuarios/
-│   └── GerenciarVans/
+│   ├── GerenciarVans/
+│   ├── AdminFunc.c
+│   └── AdminFunc.h
 ├── UserFunc/
+│   ├── UserFunc.c
+│   └── UserFunc.h
 ├── dados/
-│   └── usuarios.csv
+│   ├── usuarios.csv
+│   └── vans.csv
+├── .gitignore
 ├── main.c
-├── structs.h
 ├── Makefile
-└── README.md
+├── README.md
+└── structs.h
 ```
+
+Os módulos `GerenciarUsuarios` e `GerenciarVans` concentram as funcionalidades relacionadas ao gerenciamento de usuários e vans, respectivamente.
 
 ## Pré-requisitos
 
@@ -71,20 +83,29 @@ make clean
 
 ## Armazenamento dos dados
 
-Os dados dos usuários são armazenados no arquivo `dados/usuarios.csv`.
+Os dados são armazenados em arquivos CSV dentro da pasta `dados/`:
 
-**Importante:** utilize apenas dados fictícios no repositório. As senhas atualmente são armazenadas em texto puro. Portanto, esta implementação é destinada ao desenvolvimento acadêmico e não deve ser utilizada em produção sem melhorias de segurança.
+- `usuarios.csv`: registros de usuários.
+- `vans.csv`: registros de vans.
+
+**Importante:** utilize apenas dados fictícios no repositório. As senhas atualmente são armazenadas em texto puro, portanto esta implementação é destinada ao desenvolvimento acadêmico e não deve ser utilizada em produção sem melhorias de segurança.
 
 ## Próximas etapas
 
 As funcionalidades abaixo fazem parte da evolução planejada do projeto e não devem ser consideradas implementadas apenas por estarem listadas aqui:
 
 - Aprimoramento do controle de acesso por perfil.
-- Gerenciamento de vans e relacionamento entre usuários e veículos.
+- Gerenciamento completo de vans e relacionamento entre usuários e veículos.
 - Acompanhamento de rotas por GPS.
-- Integração com pagamentos.
-- Envio de notificações.
+- Controle de pagamentos e presença.
+- Envio de notificações e integração com serviços externos.
 
 ## Equipe
 
 Projeto desenvolvido por estudantes do curso de Análise e Desenvolvimento de Sistemas, como parte do Projeto Integrador.
+
+Integrantes:
+
+- Lucas Couto
+- Gustavo Ferreira
+- Willen Favarin
